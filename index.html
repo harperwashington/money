@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Washington STEM Academy - Economy Tracker</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    /* Theme backgrounds */
+    body.theme-light {
+      background: linear-gradient(to bottom, #e6f7ec, #e6f0f9);
+    }
+    body.theme-ocean {
+      background: linear-gradient(to bottom, #e6f0f9, #e6f7fa);
+    }
+    body.theme-forest {
+      background: linear-gradient(to bottom, #e6f7ec, #e6f9f1);
+    }
+    body.theme-sunset {
+      background: linear-gradient(to bottom, #fdf6e3, #fef0e6);
+    }
+    body.theme-lavender {
+      background: linear-gradient(to bottom, #f3e8fd, #fce7f6);
+    }
+    body.theme-midnight {
+      background: linear-gradient(to bottom, #1a202c, #1e3a8a);
+      color: white;
+    }
+    body.theme-forestNight {
+      background: linear-gradient(to bottom, #1a202c, #166534);
+      color: white;
+    }
+    body.theme-cosmic {
+      background: linear-gradient(to bottom, #1a202c, #5b21b6);
+      color: white;
+    }
+    body.theme-charcoal {
+      background: linear-gradient(to bottom, #1a202c, #1f2937);
+      color: white;
+    }
+    body.theme-chocolate {
+      background: linear-gradient(to bottom, #1a202c, #92400e);
+      color: white;
+    }
+
+    /* Container styles */
+    .container {
+      max-width: 28rem;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Header styles */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .logo {
+      width: 150px;
+      height: auto;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      transition: color 0.3s ease;
+    }
+
+    /* Theme colors */
+    .theme-light .title { color: #059669; }
+    .theme-light .subtitle { color: #2563eb; }
+    .theme-ocean .title { color: #2563eb; }
+    .theme-ocean .subtitle { color: #0891b2; }
+    .theme-forest .title { color: #059669; }
+    .theme-forest .subtitle { color: #10b981; }
+    .theme-sunset .title { color: #f59e0b; }
+    .theme-sunset .subtitle { color: #f97316; }
+    .theme-lavender .title { color: #8b5cf6; }
+    .theme-lavender .subtitle { color: #ec4899; }
+    .theme-midnight .title { color: #60a5fa; }
+    .theme-midnight .subtitle { color: #93c5fd; }
+    .theme-forestNight .title { color: #4ade80; }
+    .theme-forestNight .subtitle { color: #86efac; }
+    .theme-cosmic .title { color: #a78bfa; }
+    .theme-cosmic .subtitle { color: #c4b5fd; }
+    .theme-charcoal .title { color: #e5e7eb; }
+    .theme-charcoal .subtitle { color: #9ca3af; }
+    .theme-chocolate .title { color: #fbbf24; }
+    .theme-chocolate .subtitle { color: #fcd34d; }
+
+    /* Card styles */
+    .card {
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .theme-light .card, .theme-ocean .card, .theme-forest .card, .theme-sunset .card, .theme-lavender .card {
+      background-color: white;
+      color: #111827;
+    }
+
+    .theme-midnight .card, .theme-forestNight .card, .theme-cosmic .card, .theme-charcoal .card, .theme-chocolate .card {
+      background-color: #1f2937;
+      color: white;
+    }
+
+    /* Balance section */
+    .balance-section {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .balance-section:hover {
+      transform: scale(1.05);
+    }
+
+    .balance-label {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .balance-amount {
+      font-size: 2.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.3s ease;
+    }
+
+    .theme-light .balance-amount { color: #059669; }
+    .theme-ocean .balance-amount { color: #2563eb; }
+    .theme-forest .balance-amount { color: #10b981; }
+    .theme-sunset .balance-amount { color: #f59e0b; }
+    .theme-lavender .balance-amount { color: #8b5cf6; }
+    .theme-midnight .balance-amount { color: #60a5fa; }
+    .theme-forestNight .balance-amount { color: #4ade80; }
+    .theme-cosmic .balance-amount { color: #a78bfa; }
+    .theme-charcoal .balance-amount { color: #e5e7eb; }
+    .theme-chocolate .balance-amount { color: #fbbf24; }
+
+    /* Input section */
+    .input-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group {
+      display: flex;
+      margin-bottom: 1rem;
+    }
+
+    .input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      margin-right: 0.5rem;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .theme-midnight .input, .theme-forestNight .input, .theme-cosmic .input, .theme-charcoal .input, .theme-chocolate .input {
+      background-color: #374151;
+      color: white;
+      border-color: #4b5563;
+    }
+
+    /* Button styles */
+    .button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button:active {
+      transform: translateY(1px);
+    }
+
+    .button-add {
+      background-color: #10b981;
+      color: white;
+      margin-right: 0.5rem;
+    }
+
+    .button-remove {
+      background-color: #ef4444;
+      color: white;
+    }
+
+    .theme-ocean .button-add { background-color: #2563eb; }
+    .theme-forest .button-add { background-color: #10b981; }
+    .theme-sunset .button-add { background-color: #f59e0b; }
+    .theme-lavender .button-add { background-color: #8b5cf6; }
+    .theme-midnight .button-add { background-color: #3b82f6; }
+    .theme-forestNight .button-add { background-color: #22c55e; }
+    .theme-cosmic .button-add { background-color: #8b5cf6; }
+    .theme-charcoal .button-add { background-color: #6b7280; }
+    .theme-chocolate .button-add { background-color: #b45309; }
+
+    .button-icon {
+      margin-right: 0.25rem;
+    }
+
+    /* Amount buttons grid */
+    .amount-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .amount-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .amount-button-container {
+      width: 50%;
+      transition: transform 0.2s ease;
+    }
+
+    .amount-button-container:hover {
+      transform: scale(1.05);
+    }
+
+    .amount-button-container:active {
+      transform: scale(0.95);
+    }
+
+    .amount-button {
+      width: 100%;
+    }
+
+    /* Reset button */
+    .reset-button {
+      width: 100%;
+      background-color: transparent;
+      border: 1px solid #ef4444;
+      color: #ef4444;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .reset-button:hover {
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    .theme-midnight .reset-button, .theme-forestNight .reset-button, .theme-cosmic .reset-button, .theme-charcoal .reset-button, .theme-chocolate .reset-button {
+      border-color: #f87171;
+      color: #f87171;
+    }
+
+    .theme-midnight .reset-button:hover, .theme-forestNight .reset-button:hover, .theme-cosmic .reset-button:hover, .theme-charcoal .reset-button:hover, .theme-chocolate .reset-button:hover {
+      background-color: rgba(248, 113, 113, 0.2);
+    }
+
+    /* Transactions section */
+    .transactions-heading {
+      font-size: 1.125rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .transactions-list {
+      max-height: 15rem;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+
+    .transaction-item {
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .transaction-add {
+      background-color: rgba(16, 185, 129, 0.1);
+    }
+
+    .transaction-remove {
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    .theme-midnight .transaction-add, .theme-forestNight .transaction-add, .theme-cosmic .transaction-add, .theme-charcoal .transaction-add, .theme-chocolate .transaction-add {
+      background-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .theme-midnight .transaction-remove, .theme-forestNight .transaction-remove, .theme-cosmic .transaction-remove, .theme-charcoal .transaction-remove, .theme-chocolate .transaction-remove {
+      background-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .transaction-amount {
+      display: flex;
+      align-items: center;
+    }
+
+    .transaction-add .transaction-amount {
+      color: #10b981;
+    }
+
+    .transaction-remove .transaction-amount {
+      color: #ef4444;
+    }
+
+    .transaction-time {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .theme-midnight .transaction-time, .theme-forestNight .transaction-time, .theme-cosmic .transaction-time, .theme-charcoal .transaction-time, .theme-chocolate .transaction-time {
+      color: #9ca3af;
+    }
+
+    .empty-transactions {
+      text-align: center;
+      padding: 1rem;
+      color: #6b7280;
+    }
+
+    .theme-midnight .empty-transactions, .theme-forestNight .empty-transactions, .theme-cosmic .empty-transactions, .theme-charcoal .empty-transactions, .theme-chocolate .empty-transactions {
+      color: #9ca3af;
+    }
+
+    /* Theme switcher */
+    .theme-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 9999px;
+      transition: transform 0.2s ease;
+    }
+
+    .theme-button:hover {
+      transform: scale(1.1);
+    }
+
+    .theme-button:active {
+      transform: scale(0.9);
+    }
+
+    .theme-switcher {
+      position: absolute;
+      top: 3rem;
+      right: 0;
+      z-index: 10;
+      width: 16rem;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      animation: fadeIn 0.2s ease;
+    }
+
+    .theme-light .theme-switcher, .theme-ocean .theme-switcher, .theme-forest .theme-switcher, .theme-sunset .theme-switcher, .theme-lavender .theme-switcher {
+      background-color: white;
+    }
+
+    .theme-midnight .theme-switcher, .theme-forestNight .theme-switcher, .theme-cosmic .theme-switcher, .theme-charcoal .theme-switcher, .theme-chocolate .theme-switcher {
+      background-color: #1f2937;
+      color: white;
+    }
+
+    .theme-switcher-header {
+      font-size: 1.125rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .theme-mode-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .theme-mode-label {
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-light .theme-mode-label, .theme-ocean .theme-mode-label, .theme-forest .theme-mode-label, .theme-sunset .theme-mode-label, .theme-lavender .theme-mode-label {
+      color: #4b5563;
+    }
+
+    .theme-midnight .theme-mode-label, .theme-forestNight .theme-mode-label, .theme-cosmic .theme-mode-label, .theme-charcoal .theme-mode-label, .theme-chocolate .theme-mode-label {
+      color: #d1d5db;
+    }
+
+    .theme-option {
+      width: 100%;
+      text-align: left;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border: none;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      background: none;
+    }
+
+    .theme-option:hover {
+      transform: scale(1.05);
+    }
+
+    .theme-option:active {
+      transform: scale(0.95);
+    }
+
+    .theme-light .theme-option:hover, .theme-ocean .theme-option:hover, .theme-forest .theme-option:hover, .theme-sunset .theme-option:hover, .theme-lavender .theme-option:hover {
+      background-color: #f3f4f6;
+    }
+
+    .theme-midnight .theme-option:hover, .theme-forestNight .theme-option:hover, .theme-cosmic .theme-option:hover, .theme-charcoal .theme-option:hover, .theme-chocolate .theme-option:hover {
+      background-color: #374151;
+    }
+
+    .theme-option.active {
+      box-shadow: 0 0 0 2px #3b82f6;
+    }
+
+    .theme-color {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 9999px;
+      margin-right: 0.5rem;
+    }
+
+    .theme-name {
+      font-size: 0.875rem;
+    }
+
+    .theme-light .theme-name, .theme-ocean .theme-name, .theme-forest .theme-name, .theme-sunset .theme-name, .theme-lavender .theme-name {
+      color: #1f2937;
+    }
+
+    .theme-midnight .theme-name, .theme-forestNight .theme-name, .theme-cosmic .theme-name, .theme-charcoal .theme-name, .theme-chocolate .theme-name {
+      color: #f9fafb;
+    }
+
+    /* Theme color swatches */
+    .theme-color-light {
+      background: linear-gradient(to right, #e6f7ec, #e6f0f9);
+    }
+    .theme-color-ocean {
+      background: linear-gradient(to right, #e6f0f9, #e6f7fa);
+    }
+    .theme-color-forest {
+      background: linear-gradient(to right, #e6f7ec, #e6f9f1);
+    }
+    .theme-color-sunset {
+      background: linear-gradient(to right, #fdf6e3, #fef0e6);
+    }
+    .theme-color-lavender {
+      background: linear-gradient(to right, #f3e8fd, #fce7f6);
+    }
+    .theme-color-midnight {
+      background: linear-gradient(to right, #1a202c, #1e3a8a);
+    }
+    .theme-color-forestNight {
+      background: linear-gradient(to right, #1a202c, #166534);
+    }
+    .theme-color-cosmic {
+      background: linear-gradient(to right, #1a202c, #5b21b6);
+    }
+    .theme-color-charcoal {
+      background: linear-gradient(to right, #1a202c, #1f2937);
+    }
+    .theme-color-chocolate {
+      background: linear-gradient(to right, #1a202c, #92400e);
+    }
+
+    /* Toast notification */
+    .toast-container {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      z-index: 50;
+    }
+
+    .toast {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      max-width: 20rem;
+      animation: toastIn 0.3s ease;
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .toast-success {
+      background-color: #ecfdf5;
+      border-left: 4px solid #10b981;
+    }
+
+    .toast-error {
+      background-color: #fef2f2;
+      border-left: 4px solid #ef4444;
+    }
+
+    .theme-midnight .toast-success, .theme-forestNight .toast-success, .theme-cosmic .toast-success, .theme-charcoal .toast-success, .theme-chocolate .toast-success {
+      background-color: #064e3b;
+      color: white;
+    }
+
+    .theme-midnight .toast-error, .theme-forestNight .toast-error, .theme-cosmic .toast-error, .theme-charcoal .toast-error, .theme-chocolate .toast-error {
+      background-color: #7f1d1d;
+      color: white;
+    }
+
+    .toast-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .toast-message {
+      font-size: 0.875rem;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 640px) {
+      .container {
+        padding: 0 0.5rem;
+      }
+
+      .balance-amount {
+        font-size: 1.875rem;
+      }
+
+      .amount-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Utility classes */
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body class="theme-light">
+  <div class="container">
+    <header class="header">
+      <div class="logo-container">
+        <img src="https://core-docs.s3.amazonaws.com/live_feed_image/image/2760364/large_Logo_Top_Door_Frame.jpg" alt="Washington STEM Academy Logo" class="logo">
+      </div>
+      <h2 class="subtitle">6th Grade Economy Tracker</h2>
+      
+      <button class="theme-button" id="themeButton" aria-label="Change theme">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
+        </svg>
+      </button>
+      
+      <div class="theme-switcher hidden" id="themeSwitcher">
+        <h3 class="theme-switcher-header">Themes</h3>
+        <div class="theme-mode-labels">
+          
+        </div>
+        
+        <div id="lightThemes">
+          <button class="theme-option" data-theme="light">
+            <div class="theme-color theme-color-light"></div>
+            <span class="theme-name">Default</span>
+          </button>
+          <button class="theme-option" data-theme="ocean">
+            <div class="theme-color theme-color-ocean"></div>
+            <span class="theme-name">Ocean</span>
+          </button>
+          <button class="theme-option" data-theme="forest">
+            <div class="theme-color theme-color-forest"></div>
+            <span class="theme-name">Forest</span>
+          </button>
+          <button class="theme-option" data-theme="sunset">
+            <div class="theme-color theme-color-sunset"></div>
+            <span class="theme-name">Sunset</span>
+          </button>
+          <button class="theme-option" data-theme="lavender">
+            <div class="theme-color theme-color-lavender"></div>
+            <span class="theme-name">Lavender</span>
+          </button>
+        </div>
+        
+        <div id="darkThemes">
+          <button class="theme-option" data-theme="midnight">
+            <div class="theme-color theme-color-midnight"></div>
+            <span class="theme-name">Midnight</span>
+          </button>
+          <button class="theme-option" data-theme="forestNight">
+            <div class="theme-color theme-color-forestNight"></div>
+            <span class="theme-name">Forest Night</span>
+          </button>
+          <button class="theme-option" data-theme="cosmic">
+            <div class="theme-color theme-color-cosmic"></div>
+            <span class="theme-name">Cosmic</span>
+          </button>
+          <button class="theme-option" data-theme="charcoal">
+            <div class="theme-color theme-color-charcoal"></div>
+            <span class="theme-name">Charcoal</span>
+          </button>
+          <button class="theme-option" data-theme="chocolate">
+            <div class="theme-color theme-color-chocolate"></div>
+            <span class="theme-name">Chocolate</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="balance-section">
+        <h3 class="balance-label">Your Balance</h3>
+        <div class="balance-amount" id="balanceDisplay">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span id="balanceAmount">0</span>
+        </div>
+      </div>
+
+      <div class="input-section">
+        <div class="input-group">
+          <input type="text" class="input" id="customAmount" placeholder="Enter amount" pattern="[0-9]*">
+          <button class="button button-add" id="addCustomButton">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add
+          </button>
+          <button class="button button-remove" id="removeCustomButton">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Remove
+          </button>
+        </div>
+
+        <div class="amount-grid">
+          <div class="amount-row">
+            <div class="amount-button-container">
+              <button class="button button-add amount-button" data-amount="50">+50</button>
+            </div>
+            <div class="amount-button-container">
+              <button class="button button-remove amount-button" data-amount="50">-50</button>
+            </div>
+          </div>
+          <div class="amount-row">
+            <div class="amount-button-container">
+              <button class="button button-add amount-button" data-amount="100">+100</button>
+            </div>
+            <div class="amount-button-container">
+              <button class="button button-remove amount-button" data-amount="100">-100</button>
+            </div>
+          </div>
+          <div class="amount-row">
+            <div class="amount-button-container">
+              <button class="button button-add amount-button" data-amount="500">+500</button>
+            </div>
+            <div class="amount-button-container">
+              <button class="button button-remove amount-button" data-amount="500">-500</button>
+            </div>
+          </div>
+          <div class="amount-row">
+            <div class="amount-button-container">
+              <button class="button button-add amount-button" data-amount="1000">+1000</button>
+            </div>
+            <div class="amount-button-container">
+              <button class="button button-remove amount-button" data-amount="1000">-1000</button>
+            </div>
+          </div>
+          <div class="amount-row">
+            <div class="amount-button-container">
+              <button class="button button-add amount-button" data-amount="5000">+5000</button>
+            </div>
+            <div class="amount-button-container">
+              <button class="button button-remove amount-button" data-amount="5000">-5000</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="button reset-button" id="resetButton">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+            <path d="M23 4v6h-6"></path>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          Reset Balance
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="transactions-heading">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        Recent Transactions
+      </h3>
+      
+      <div class="transactions-list" id="transactionsList">
+        <div class="empty-transactions" id="emptyTransactions">No transactions yet</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // State management
+    let balance = 0;
+    let transactions = [];
+    let currentTheme = 'light';
+    let themeMenuOpen = false;
+
+    // DOM Elements
+    const balanceAmount = document.getElementById('balanceAmount');
+    const customAmountInput = document.getElementById('customAmount');
+    const addCustomButton = document.getElementById('addCustomButton');
+    const removeCustomButton = document.getElementById('removeCustomButton');
+    const resetButton = document.getElementById('resetButton');
+    const transactionsList = document.getElementById('transactionsList');
+    const emptyTransactions = document.getElementById('emptyTransactions');
+    const themeButton = document.getElementById('themeButton');
+    const themeSwitcher = document.getElementById('themeSwitcher');
+    const themeOptions = document.querySelectorAll('.theme-option');
+    const toastContainer = document.getElementById('toastContainer');
+    const addButtons = document.querySelectorAll('.button-add.amount-button');
+    const removeButtons = document.querySelectorAll('.button-remove.amount-button');
+
+    // Load data from localStorage
+    function loadData() {
+      const savedBalance = localStorage.getItem('stemEconomyBalance');
+      const savedTransactions = localStorage.getItem('stemEconomyTransactions');
+      const savedTheme = localStorage.getItem('stemEconomyTheme');
+
+      if (savedBalance) {
+        balance = parseInt(savedBalance);
+        updateBalanceDisplay();
+      }
+
+      if (savedTransactions) {
+        try {
+          transactions = JSON.parse(savedTransactions);
+          renderTransactions();
+        } catch (e) {
+          console.error("Error parsing transactions:", e);
+          transactions = [];
+        }
+      }
+
+      if (savedTheme && isValidTheme(savedTheme)) {
+        currentTheme = savedTheme;
+        applyTheme(currentTheme);
+        updateActiveThemeOption();
+      }
+    }
+
+    // Save data to localStorage
+    function saveData() {
+      localStorage.setItem('stemEconomyBalance', balance.toString());
+      localStorage.setItem('stemEconomyTransactions', JSON.stringify(transactions));
+    }
+
+    // Save theme to localStorage
+    function saveTheme() {
+      localStorage.setItem('stemEconomyTheme', currentTheme);
+    }
+
+    // Update balance display
+    function updateBalanceDisplay() {
+      balanceAmount.textContent = balance.toLocaleString();
+      
+      // Add animation effect
+      balanceAmount.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        balanceAmount.style.transform = 'scale(1)';
+      }, 200);
+    }
+
+    // Add amount to balance
+    function addAmount(amount) {
+      balance += amount;
+      updateBalanceDisplay();
+      
+      const transaction = {
+        id: Date.now().toString(),
+        amount: amount,
+        type: 'add',
+        timestamp: Date.now()
+      };
+      
+      transactions.unshift(transaction);
+      if (transactions.length > 10) {
+        transactions.pop();
+      }
+      
+      renderTransactions();
+      saveData();
+      
+      showToast('Amount Added!', `Added ${amount} to your balance.`, 'success');
+    }
+
+    // Remove amount from balance
+    function removeAmount(amount) {
+      if (balance - amount < 0) {
+        showToast('Not enough funds!', 'You don\'t have enough money to remove this amount.', 'error');
+        return;
+      }
+      
+      balance -= amount;
+      updateBalanceDisplay();
+      
+      const transaction = {
+        id: Date.now().toString(),
+        amount: amount,
+        type: 'remove',
+        timestamp: Date.now()
+      };
+      
+      transactions.unshift(transaction);
+      if (transactions.length > 10) {
+        transactions.pop();
+      }
+      
+      renderTransactions();
+      saveData();
+      
+      showToast('Amount Removed!', `Removed ${amount} from your balance.`, 'success');
+    }
+
+    // Reset balance
+    function resetBalance() {
+      if (confirm('Are you sure you want to reset your balance to 0?')) {
+        balance = 0;
+        transactions = [];
+        updateBalanceDisplay();
+        renderTransactions();
+        saveData();
+        
+        showToast('Balance Reset!', 'Your balance has been reset to 0.', 'success');
+      }
+    }
+
+    // Format timestamp to time
+    function formatTime(timestamp) {
+      return new Date(timestamp).toLocaleTimeString([], { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+    }
+
+    // Render transactions
+    function renderTransactions() {
+      if (transactions.length === 0) {
+        emptyTransactions.classList.remove('hidden');
+        return;
+      }
+      
+      emptyTransactions.classList.add('hidden');
+      
+      // Clear existing transactions
+      const children = Array.from(transactionsList.children);
+      for (const child of children) {
+        if (child !== emptyTransactions) {
+          transactionsList.removeChild(child);
+        }
+      }
+      
+      // Add new transactions
+      transactions.forEach(transaction => {
+        const transactionItem = document.createElement('div');
+        transactionItem.className = `transaction-item transaction-${transaction.type}`;
+        
+        const amountElement = document.createElement('div');
+        amountElement.className = 'transaction-amount';
+        
+        const icon = document.createElement('svg');
+        icon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        icon.setAttribute('width', '16');
+        icon.setAttribute('height', '16');
+        icon.setAttribute('viewBox', '0 0 24 24');
+        icon.setAttribute('fill', 'none');
+        icon.setAttribute('stroke', 'currentColor');
+        icon.setAttribute('stroke-width', '2');
+        icon.setAttribute('stroke-linecap', 'round');
+        icon.setAttribute('stroke-linejoin', 'round');
+        icon.style.marginRight = '4px';
+        
+        if (transaction.type === 'add') {
+          icon.innerHTML = '<line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>';
+        } else {
+          icon.innerHTML = '<line x1="5" y1="12" x2="19" y2="12"></line>';
+        }
+        
+        const amountText = document.createElement('span');
+        amountText.textContent = `${transaction.type === 'add' ? '+' : '-'}${transaction.amount}`;
+        
+        amountElement.appendChild(icon);
+        amountElement.appendChild(amountText);
+        
+        const timeElement = document.createElement('div');
+        timeElement.className = 'transaction-time';
+        timeElement.textContent = formatTime(transaction.timestamp);
+        
+        transactionItem.appendChild(amountElement);
+        transactionItem.appendChild(timeElement);
+        
+        transactionsList.appendChild(transactionItem);
+      });
+    }
+
+    // Show toast notification
+    function showToast(title, message, type) {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      
+      const toastTitle = document.createElement('div');
+      toastTitle.className = 'toast-title';
+      toastTitle.textContent = title;
+      
+      const toastMessage = document.createElement('div');
+      toastMessage.className = 'toast-message';
+      toastMessage.textContent = message;
+      
+      toast.appendChild(toastTitle);
+      toast.appendChild(toastMessage);
+      
+      toastContainer.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          if (toast.parentNode === toastContainer) {
+            toastContainer.removeChild(toast);
+          }
+        }, 300);
+      }, 3000);
+    }
+
+    // Toggle theme switcher
+    function toggleThemeSwitcher(event) {
+      event.stopPropagation(); // Prevent event from bubbling up
+      themeMenuOpen = !themeMenuOpen;
+      if (themeMenuOpen) {
+        themeSwitcher.classList.remove('hidden');
+      } else {
+        themeSwitcher.classList.add('hidden');
+      }
+    }
+
+    // Apply theme
+    function applyTheme(theme) {
+      document.body.className = `theme-${theme}`;
+      currentTheme = theme;
+      saveTheme();
+      showToast('Theme Changed!', `Applied the ${theme} theme.`, 'success');
+    }
+
+    // Check if theme is valid
+    function isValidTheme(theme) {
+      const validThemes = ['light', 'ocean', 'forest', 'sunset', 'lavender', 'midnight', 'forestNight', 'cosmic', 'charcoal', 'chocolate'];
+      return validThemes.includes(theme);
+    }
+
+    // Update active theme option
+    function updateActiveThemeOption() {
+      themeOptions.forEach(option => {
+        if (option.dataset.theme === currentTheme) {
+          option.classList.add('active');
+        } else {
+          option.classList.remove('active');
+        }
+      });
+    }
+
+    // Event Listeners
+    addCustomButton.addEventListener('click', () => {
+      const amount = parseInt(customAmountInput.value);
+      if (amount > 0) {
+        addAmount(amount);
+        customAmountInput.value = '';
+      }
+    });
+
+    removeCustomButton.addEventListener('click', () => {
+      const amount = parseInt(customAmountInput.value);
+      if (amount > 0) {
+        removeAmount(amount);
+        customAmountInput.value = '';
+      }
+    });
+
+    customAmountInput.addEventListener('input', (e) => {
+      // Only allow numbers
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+
+    customAmountInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const amount = parseInt(customAmountInput.value);
+        if (amount > 0) {
+          addAmount(amount);
+          customAmountInput.value = '';
+        }
+      }
+    });
+
+    resetButton.addEventListener('click', resetBalance);
+
+    addButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const amount = parseInt(button.dataset.amount);
+        addAmount(amount);
+      });
+    });
+
+    removeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const amount = parseInt(button.dataset.amount);
+        removeAmount(amount);
+      });
+    });
+
+    // Fix for theme button - use direct event handler
+    themeButton.addEventListener('click', toggleThemeSwitcher);
+
+    // Apply theme when theme option is clicked
+    themeOptions.forEach(option => {
+      option.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent event from bubbling
+        const theme = option.dataset.theme;
+        applyTheme(theme);
+        updateActiveThemeOption();
+        themeMenuOpen = false;
+        themeSwitcher.classList.add('hidden');
+      });
+    });
+
+    // Close theme switcher when clicking outside
+    document.addEventListener('click', (e) => {
+      if (themeMenuOpen && !themeSwitcher.contains(e.target) && e.target !== themeButton) {
+        themeMenuOpen = false;
+        themeSwitcher.classList.add('hidden');
+      }
+    });
+
+    // Initialize
+    loadData();
+    updateActiveThemeOption();
+  </script>
+</body>
+</html>
